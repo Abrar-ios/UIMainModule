@@ -1,180 +1,134 @@
-# Essential Feed App – Image Feed Feature
+# The UI Design Patterns Challenge - iOSLeadEssentials.com
 
-[![Build Status](https://travis-ci.com/essentialdevelopercom/essential-feed-case-study.svg?branch=master)](https://travis-ci.com/essentialdevelopercom/essential-feed-case-study)
+![](https://github.com/essentialdevelopercom/ios-lead-essentials-ui-design-patterns-challenge/workflows/CI/badge.svg)
 
-## BDD Specs
+It’s time to put your UI design patterns skills to the test! 
 
-### Story: Customer requests to see their image feed
+You are called to implement a new UI feature: displaying localized error messages to the customers when the app fails to load the feed.
 
-### Narrative #1
+The goal is to implement this feature in both **MVVM** and **MVP**.
 
-```
-As an online customer
-I want the app to automatically load my latest image feed
-So I can always enjoy the newest images of my friends
-```
+We’ve provided you with an MVC implementation using a reusable `ErrorView` as the `UITableView.tableHeaderView`. 
 
-#### Scenarios (Acceptance criteria)
+You can study and use the MVC solution as a guide to help you implement the same feature using MVVM and MVP.
 
-```
-Given the customer has connectivity
- When the customer requests to see their feed
- Then the app should display the latest feed from remote
-  And replace the cache with the new feed
-```
-
-### Narrative #2
-
-```
-As an offline customer
-I want the app to show the latest saved version of my image feed
-So I can always enjoy images of my friends
-```
-
-#### Scenarios (Acceptance criteria)
-
-```
-Given the customer doesn't have connectivity
-  And there’s a cached version of the feed
-  And the cache is less than seven days old
- When the customer requests to see the feed
- Then the app should display the latest feed saved
-
-Given the customer doesn't have connectivity
-  And there’s a cached version of the feed
-  And the cache is seven days old or more
- When the customer requests to see the feed
- Then the app should display an error message
-
-Given the customer doesn't have connectivity
-  And the cache is empty
- When the customer requests to see the feed
- Then the app should display an error message
-```
-
-## Use Cases
-
-### Load Feed From Remote Use Case
-
-#### Data:
-- URL
-
-#### Primary course (happy path):
-1. Execute "Load Image Feed" command with above data.
-2. System downloads data from the URL.
-3. System validates downloaded data.
-4. System creates image feed from valid data.
-5. System delivers image feed.
-
-#### Invalid data – error course (sad path):
-1. System delivers invalid data error.
-
-#### No connectivity – error course (sad path):
-1. System delivers connectivity error.
+![Feed iOS App UI](feed_ios_app_ui.png)
 
 
-### Load Feed From Cache Use Case
+## Goals
 
-#### Primary course:
-1. Execute "Load Image Feed" command with above data.
-2. System retrieves feed data from cache.
-3. System validates cache is less than seven days old.
-4. System creates image feed from cached data.
-5. System delivers image feed.
+1) Display an error message to the customer when the app fails to load the feed.
 
-#### Retrieval error course (sad path):
-1. System delivers error.
+2) The error message must be localized in **at least** 4 languages. 
 
-#### Expired cache course (sad path): 
-1. System delivers no feed images.
+	- The challenge project comes with three supported languages: English, Portuguese, and Greek. 
 
-#### Empty cache course (sad path): 
-1. System delivers no feed images.
+	- The MVC solution contains the error message translated in the 3 given supported languages. You should reuse those messages in your MVVM and MVP solutions. 
 
+	- You need to **add one extra language** of your choice to all 4 modules (MVC, MVVM, MVP, and the main `Feed iOS App` module)
 
-### Validate Feed Cache Use Case
+		- Tip: use Google Translate if needed
 
-#### Primary course:
-1. Execute "Validate Cache" command with above data.
-2. System retrieves feed data from cache.
-3. System validates cache is less than seven days old.
+	- When adding a new localization to the project, make sure to select all resource files for all 4 modules.
 
-#### Retrieval error course (sad path):
-1. System deletes cache.
+3) The customer should be able to tap to dismiss the error message.
 
-#### Expired cache course (sad path): 
-1. System deletes cache.
+5) Write tests to validate your implementation, including dismiss on tap (aim to write the test first!).
 
 
-### Cache Feed Use Case
+## Instructions
 
-#### Data:
-- Image Feed
+1) Fork the latest version of this repository. Here's <a href="https://guides.github.com/activities/forking" target="_blank">how forking works</a>.
 
-#### Primary course (happy path):
-1. Execute "Save Image Feed" command with above data.
-2. System deletes old cache data.
-3. System encodes image feed.
-4. System timestamps the new cache.
-5. System saves new cache data.
-6. System delivers success message.
+2) Open the `UIDesignPatternsChallenge.xcodeproj` project on Xcode 13.2.1.
+	
+	- Other Xcode versions are not supported in this branch.
+	
+		- Challenges submitted with branches other than `xcode13_2_1` will be rejected.
 
-#### Deleting error course (sad path):
-1. System delivers error.
+	- Do not change any project settings, including scheme settings.
 
-#### Saving error course (sad path):
-1. System delivers error.
+	- Do not change the indentation in the project.
+
+	- Do not rename the existing classes and files.
+
+	- Important: Every time you build the project, it'll automatically reformat the modified files with SwiftFormat to maintain the code consistent.
+
+3) The project is separated into modules:
+
+	- The `Feed Feature Module` is the shared module containing the `FeedItem` data model and abstract interfaces. ***You won’t need to change anything in this module.***
+	
+	- The `Feed iOS App` is the Main iOS Application module for composing the MV\* solutions in a `UITabBarController` and running the iOS application. ***You won’t need to change anything in this module.***
+
+	- The `MVC Module` contains the finished MVC solution—use it as a guideline. You shouldn't change anything in this module, only add the new supported language.
+	
+	- The `MVVM Module` contains the unfinished MVVM solution. You must implement the localized error message.
+	
+	- The `MVP Module` contains the unfinished MVP solution. You must implement the localized error message.
+
+4) Every module has its own scheme for building and running tests. 
+	- When studying the MVC solution, switch to the MVC scheme. 
+	- When developing the MVVM solution, switch to the MVVM scheme. 
+	- When developing the MVP solution, switch to the MVP scheme.
+	- When running the application, switch to the `Feed iOS App` scheme.
+
+5) While developing your solutions, run all tests in the selected scheme with CMD+U.
+
+6) The MV\* modules are independent of each other. For example, a change in the MVC `FeedViewController` will not affect the MVVM `FeedViewController` (even though they have the same name, they belong to distinct module namespaces!).
+
+7) Your changes in the MV\* modules will reflect in the respective MV\* tab of the `Feed iOS App` Application.
+	- If you’re interested in studying the composition of the MV\* modules, have a look at the `AppDelegate` in the `Feed iOS App` module.
+
+8) You can see/interact with your solution by running the Application on the simulator (or device). 
+	- Switch to the `Feed iOS App` scheme and press CMD+R.
+	- Navigate to the MV\* tab on the simulator/device.
+	- *The feed reload will always fail after a given timeout, so you can test your solution.* If you’re interested in studying how the feed reload always fails, have a look at the `AlwaysFailingLoader` (and its tests!) in the `Feed iOS App` module.
+
+9) The layout should match the provided MVC solution and support Dark Mode.
+
+10) The MVVM and MVP modules contain commented-out snapshot tests at `MV\* Module/Tests/Feed UI/FeedUISnapshotTests.swift`.
+	
+	- Uncomment and run one snapshot test at a time to validate the layout is pixel-perfect in Light and Dark Mode.
+
+	- You shouldn't change any existing snapshot. They're there to validate your implementation. 
+
+	- ⚠️ Important: ***Different simulators may generate slightly different snapshots (even if they look the same!).*** So you must run the snapshot tests using the exact same simulator used to take the snapshots:
+
+		- Use *precisely* the 'iPhone 13 - iOS 15.2' simulator.
+
+	- All snapshot tests must pass before you submit the pull request.
+
+11) When all tests are passing and you're done implementing your solution:
+
+	- Review your code and make sure it follows **all** the instructions above.
+
+		- If it doesn't, make the appropriate changes, push, and review your code again.
+
+	- If it does, create a Pull Request from your branch to the main challenge repo's matching branch.
+
+		- For example, if you implemented the challenge using the `xcode13_2_1` branch, your PR should be from your fork's `xcode13_2_1` branch into the main repo's `xcode13_2_1` branch (DO NOT MIX Xcode versions or you'll have merge conflicts!).
+
+	- The title of the Pull Request should be: Your Name - UI Design Patterns Challenge
+
+	- **Create only one Pull Request** and **do not close it**. If you have any issues, send a comment inside the Pull Request asking for help.
+
+12) As soon as you create a Pull Request, we automatically receive a notification. You just need to create it and wait while we review your Pull Request and approve it or request any changes required with detailed feedback.
 
 
-## Flowchart
+## Guidelines
 
-![Feed Loading Feature](feed_flowchart.png)
+1) Aim to commit your changes every time you add/alter the behavior of your system or refactor your code.
 
-## Architecture
+2) Aim for descriptive commit messages that clarify the intent of your contribution which will help other developers understand your train of thought and purpose of changes.
 
-![Feed Loading Feature](feed_architecture.png)
+3) The system should always be in a green state, meaning that in each commit all tests should be passing.
 
-## Model Specs
+4) The project should build without warnings.
 
-### Feed Image
+5) The code should be carefully organized and easy to read (e.g. indentation must be consistent).
 
-| Property      | Type                |
-|---------------|---------------------|
-| `id`          | `UUID`              |
-| `description` | `String` (optional) |
-| `location`    | `String` (optional) |
-| `url`	        | `URL`               |
+6) Make careful and proper use of access control, marking as `private` any implementation details that aren’t referenced from other external components.
 
-### Payload contract
+7) Aim to write self-documenting code by providing context and detail when naming your components, avoiding explanations in comments.
 
-```
-GET *url* (TBD)
-
-200 RESPONSE
-
-{
-	"items": [
-		{
-			"id": "a UUID",
-			"description": "a description",
-			"location": "a location",
-			"image": "https://a-image.url",
-		},
-		{
-			"id": "another UUID",
-			"description": "another description",
-			"image": "https://another-image.url"
-		},
-		{
-			"id": "even another UUID",
-			"location": "even another location",
-			"image": "https://even-another-image.url"
-		},
-		{
-			"id": "yet another UUID",
-			"image": "https://yet-another-image.url"
-		}
-		...
-	]
-}
-```
+Happy coding!
